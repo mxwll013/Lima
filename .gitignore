@@ -1,0 +1,18 @@
+# --------------------------------------------------------------------------------
+# Echo Engine Project - Apache 2.0 License
+
+# - https://echoengine.org
+# - https://docs.echoengine.org
+# - https://style.echoengine.org
+
+# Part of the Echo Engine Project, a modular C++ engine designed for
+# flexibility, maintainability, and scalability.
+
+# Module : Sierra - Shared
+# Copyright (c) 2025 Echo Engine Project contributors
+# --------------------------------------------------------------------------------
+
+bin/
+obj/
+.cache/
+compile_commands.json

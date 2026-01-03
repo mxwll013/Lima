@@ -1,0 +1,3 @@
+[submodule "mdl/Sierra"]
+	path = mdl/Sierra
+	url = git@github.com:mxwll013/Sierra.git
