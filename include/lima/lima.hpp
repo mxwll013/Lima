@@ -33,9 +33,12 @@ Copyright (c) 2025 Echo Engine Project contributors
 #include "lima/impl/prefix.hpp"
 #include "lima/impl/sink.hpp"
 
+#include "sierra/utils/char.hpp"
+#include "sierra/utils/string.hpp"
+
 #include <sierra/prims.hpp>
 
-#include <__format/format_functions.h>
+#include <format>
 
 #define LM_LOG(l, ...) lm::log<lm::impl::Level::l>(__VA_ARGS__)
 
@@ -49,19 +52,19 @@ Copyright (c) 2025 Echo Engine Project contributors
 namespace lm {
 
 template<impl::Level L, typename... V>
-void log(std::format_string<V...> fmt, V &&...args);
+void log(utils::Fmt<V...> fmt, V &&...args);
 
 template<impl::Level L, typename... V>
-void log(std::format_string<V...> fmt, V &&...args) {
-    char *start     = impl::fmt_buffer.data();
-    char *ptr       = impl::prefix<L>();
+void log(utils::Fmt<V...> fmt, V &&...args) {
+    char *start = impl::fmt_buffer.data();
+    char *ptr   = impl::prefix<L>();
+    ptr         = std::format_to(ptr, fmt, std::forward<V>(args)...);
+    *ptr++      = utils::LF;
 
-    ptr             = std::format_to(ptr, fmt, std::forward<V>(args)...);
+    constexpr impl::SinkOutput OUT = output(L);
 
-    *ptr++          = '\n';
-
-    const usize len = static_cast<usize>(ptr - start);
-    impl::writeFD(len, impl::STDOUT_FD);
+    const usize                len = static_cast<usize>(ptr - start);
+    impl::Sink<OUT>::write(len);
 }
 
 } // namespace lm

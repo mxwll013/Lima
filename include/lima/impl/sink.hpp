@@ -11,20 +11,43 @@
 #include "lima/impl/buffer.hpp"
 
 #include <sierra/prims.hpp>
-
-#include <unistd.h>
+#include <sierra/target.hpp>
 
 namespace lm::impl {
 
-constexpr i32 STDOUT_FD = STDOUT_FILENO;
-constexpr i32 STDERR_FD = STDERR_FILENO;
+enum class SinkOutput : u8 {
+    CONSOLE_OUT,
+    CONSOLE_ERR,
+};
 
-inline void   writeFD(usize len, i32 dst) noexcept;
+template<SinkOutput O>
+struct [[nodiscard]] Sink {
+    inline static void write(usize len) noexcept;
+};
 
-void          writeFD(usize len, i32 dst) noexcept {
+} // namespace lm::impl
+
+#ifdef SRR_TARGET_UNIX
+
+    #include <unistd.h>
+
+namespace lm::impl {
+
+[[nodiscard]] consteval Fd getFd(SinkOutput out) noexcept {
+    switch (out) {
+    case SinkOutput::CONSOLE_OUT: return STD_OUT;
+    case SinkOutput::CONSOLE_ERR: return STD_ERR;
+    }
+}
+
+template<SinkOutput O>
+inline void Sink<O>::write(usize len) noexcept {
+    const Fd dst = getFd(O);
     ::write(dst, fmt_buffer.data(), len);
 }
 
 } // namespace lm::impl
+
+#endif // SRR_TARGET_UNIX
 
 #endif // LM_IMPL_SINK_HPP
