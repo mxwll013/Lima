@@ -9,8 +9,10 @@
 #define LM_IMPL_COLOR_HPP
 
 #include "lima/impl/buffer.hpp"
+#include "lima/impl/sink.hpp"
 
 #include <sierra/prims.hpp>
+#include <sierra/utils/char.hpp>
 
 #include <array>
 #include <string_view>
@@ -25,6 +27,17 @@ enum class Level : u8 {
     FATAL,
     COUNT,
 };
+
+consteval impl::SinkOutput output(impl::Level level) noexcept {
+    switch (level) {
+    case impl::Level::DEBUG: [[fallthrough]];
+    case impl::Level::INFO : [[fallthrough]];
+    case impl::Level::COUNT: return impl::SinkOutput::CONSOLE_OUT;
+    case impl::Level::WARN : [[fallthrough]];
+    case impl::Level::ERR  : [[fallthrough]];
+    case impl::Level::FATAL: return impl::SinkOutput::CONSOLE_ERR;
+    }
+}
 
 struct LevelData {
     std::string_view color;
@@ -44,16 +57,21 @@ constexpr std::array<LevelData, static_cast<usize>(Level::COUNT)> LEVEL_DATA{
 };
 
 template<Level L>
-[[nodiscard]] consteval LevelData data() noexcept;
+[[nodiscard]] inline char *prefix() noexcept;
 
 template<Level L>
-[[nodiscard]] char        *prefix() noexcept;
+[[nodiscard]] static consteval LevelData data() noexcept;
 
-[[nodiscard]] inline char *str(std::string_view str, char *ptr) noexcept;
+[[nodiscard]] inline static char *str(std::string_view str, char *ptr) noexcept;
 
 template<Level L>
-consteval LevelData data() noexcept {
+static consteval LevelData data() noexcept {
     return LEVEL_DATA.at(static_cast<usize>(L));
+}
+
+inline static char *str(std::string_view str, char *ptr) noexcept {
+    for (const char &chr : str) *ptr++ = chr;
+    return ptr;
 }
 
 template<>
@@ -67,18 +85,13 @@ char *prefix() noexcept {
 
     constexpr LevelData DATA = data<L>();
 
-    *ptr++                   = '[';
+    *ptr++                   = utils::BRACKET_OPEN;
     ptr                      = str(DATA.color, ptr);
     ptr                      = str(DATA.name, ptr);
     ptr                      = str(ANSI_RESET, ptr);
-    *ptr++                   = ']';
-    *ptr++                   = ' ';
+    *ptr++                   = utils::BRACKET_CLOSE;
+    *ptr++                   = utils::SPACE;
 
-    return ptr;
-}
-
-char *str(std::string_view str, char *ptr) noexcept {
-    for (const char &chr : str) *ptr++ = chr;
     return ptr;
 }
 
