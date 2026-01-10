@@ -1,4 +1,4 @@
-# Lima v0.1.1
+# Lima v0.1.2
 
 A simple and low-overhead logging library for the Echo Engine Project.
 
@@ -6,7 +6,7 @@ A simple and low-overhead logging library for the Echo Engine Project.
 
 - _major_ - Official deployment
 - _minor_ - Basic logging
-- _patch_ - Updated Sierra
+- _patch_ - Platform sink
 
 From the [official Documentation](https://github.com/mxwll013/Echo/blob/main/docs/index.md):
 
