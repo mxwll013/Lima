@@ -8,7 +8,7 @@
 #ifndef LM_IMPL_BUFFER_HPP
 #define LM_IMPL_BUFFER_HPP
 
-#include "sierra/primitives.hpp"
+#include <sierra/prims.hpp>
 
 #include <array>
 

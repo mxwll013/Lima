@@ -10,7 +10,7 @@
 
 #include "lima/impl/buffer.hpp"
 
-#include "sierra/primitives.hpp"
+#include <sierra/prims.hpp>
 
 #include <unistd.h>
 

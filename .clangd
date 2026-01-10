@@ -33,7 +33,6 @@ CompileFlags:
     - -Wall
     - -Wextra
     - -Wshadow
-    - -Wnon-virtual-dtor
     - -Wold-style-cast
     - -Wcast-align
     - -Wsign-conversion
@@ -76,6 +75,7 @@ Diagnostics:
     Remove:
       - bugprone-easily-swappable-parameters
       - cppcoreguidelines-pro-bounds-pointer-arithmetic
+      - cppcoreguidelines-pro-type-union-access
       - hicpp-braces-around-statements
       - hicpp-explicit-conversions
       - hicpp-use-auto

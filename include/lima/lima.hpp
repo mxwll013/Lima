@@ -33,7 +33,7 @@ Copyright (c) 2025 Echo Engine Project contributors
 #include "lima/impl/prefix.hpp"
 #include "lima/impl/sink.hpp"
 
-#include <sierra/primitives.hpp>
+#include <sierra/prims.hpp>
 
 #include <__format/format_functions.h>
 
